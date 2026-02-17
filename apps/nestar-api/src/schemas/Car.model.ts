@@ -1,91 +1,106 @@
 import { Schema } from 'mongoose';
-import { CarLocation, CarStatus, CarType } from '../libs/enums/car.enum';
+import { CarFuelType, CarLocation, CarStatus, CarType } from '../libs/enums/car.enum';
 
 const CarSchema = new Schema(
 	{
-		propertyType: {
+		carType: {
 			type: String,
 			enum: CarType,
 			required: true,
 		},
 
-		propertyStatus: {
+		carStatus: {
 			type: String,
 			enum: CarStatus,
 			default: CarStatus.ACTIVE,
 		},
 
-		propertyLocation: {
+		carLocation: {
 			type: String,
 			enum: CarLocation,
 			required: true,
 		},
 
-		propertyAddress: {
+		carAddress: {
 			type: String,
 			required: true,
 		},
 
-		propertyTitle: {
+		carTitle: {
 			type: String,
 			required: true,
 		},
 
-		propertyPrice: {
+		carPrice: {
 			type: Number,
 			required: true,
 		},
 
-		propertySquare: {
-			type: Number,
-			required: true,
-		},
+		// carSquare: {
+		// 	type: Number,
+		// 	required: true,
+		// },
+		carMileage: { // carSquare o'rniga
+            type: Number,
+            required: true,
+            default: 0,
+        },
 
-		propertyBeds: {
-			type: Number,
-			required: true,
-		},
+		// carBeds: {
+		// 	type: Number,
+		// 	required: true,
+		// },
+		carFuelType: { // carBeds o'rniga (yoqilg'i turi)
+            type: String, 
+			enum: CarFuelType, // Enum qiymatlari
+            required: true,
+        },
 
-		propertyRooms: {
-			type: Number,
-			required: true,
-		},
+		// carRooms: {
+		// 	type: Number,
+		// 	required: true,
+		// },
+	    carDoors: { // carSeats o'rniga eshiklar soni
+        type: Number,
+        required: true,
+      },
 
-		propertyViews: {
+	  
+		carViews: {
 			type: Number,
 			default: 0,
 		},
 
-		propertyLikes: {
+		carLikes: {
 			type: Number,
 			default: 0,
 		},
 
-		propertyComments: {
+		carComments: {
 			type: Number,
 			default: 0,
 		},
 
-		propertyRank: {
+		carRank: {
 			type: Number,
 			default: 0,
 		},
 
-		propertyImages: {
+		carImages: {
 			type: [String],
 			required: true,
 		},
 
-		propertyDesc: {
+		carDesc: {
 			type: String,
 		},
 
-		propertyBarter: {
+		carBarter: {
 			type: Boolean,
 			default: false,
 		},
 
-		propertyRent: {
+		carRent: {
 			type: Boolean,
 			default: false,
 		},
@@ -108,9 +123,9 @@ const CarSchema = new Schema(
 			type: Date,
 		},
 	},
-	{ timestamps: true, collection: 'properties' },
+	{ timestamps: true, collection: 'cars' },
 );
 
-CarSchema.index({ propertyType: 1, propertyLocation: 1, propertyTitle: 1, propertyPrice: 1 }, { unique: true });
+CarSchema.index({ carType: 1, carLocation: 1, carTitle: 1, carPrice: 1 }, { unique: true });
 
 export default CarSchema;

@@ -12,55 +12,55 @@ export class Car {
   _id: ObjectId;
 
    @Field(() => CarType)
-  propertyType: CarType;
+  carType: CarType;
 
    @Field(() => CarStatus)
-  propertyStatus: CarStatus;
+  carStatus: CarStatus;
 
    @Field(() => CarLocation)
-  propertyLocation: CarLocation;
+  carLocation: CarLocation;
 
    @Field(() => String)
-  propertyAddress: string;
+  carAddress: string;
 
    @Field(() => String)
-  propertyTitle: string;
+  carTitle: string;
 
    @Field(() => Number)
-  propertyPrice: number;
+  carPrice: number;
 
    @Field(() => Number)
-  propertySquare: number;
+  carMileage: number;
 
    @Field(() => Int)
-  propertyBeds: number;
+ carFuelType: number;
 
    @Field(() => Int)
-  propertyRooms: number;
+  carDoors: number;
 
    @Field(() => Int)
-  propertyViews: number;
+  carViews: number;
 
    @Field(() => Int)
-  propertyLikes: number;
+  carLikes: number;
 
    @Field(() => Int)
-  propertyComments: number;
+  carComments: number;
 
    @Field(() => Int)
-  propertyRank: number;
+  carRank: number;
 
   @Field(() => [String])
-  propertyImages: string[];
+  carImages: string[];
 
   @Field(() => String, { nullable: true })
-  propertyDesc?: string;
+  carDesc?: string;
 
   @Field(() => Boolean)
-  propertyBarter: boolean;
+  carBarter: boolean;
 
   @Field(() => Boolean)
-  propertyRent: boolean;
+  carRent: boolean;
 
   @Field(() => String)
   memberId: ObjectId;

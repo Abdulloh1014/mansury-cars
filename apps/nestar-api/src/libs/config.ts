@@ -4,14 +4,14 @@ import { ObjectId } from 'bson';
 
 export const availableAgentStors = ['createdAt', 'updatedAt', 'memberLikes', 'memberViews', 'memberRank']
 export const availableMembersStors = ['createdAt', 'updatedAt', 'memberLikes', 'memberViews']
-export const availableOptions = ['propertyBarter', 'propertyRent'];
+export const availableOptions = ['carBarter', 'carRent'];
 export const availableCarSorts = [
    'createdAt',
   'updatedAt',
-  'propertyLikes',
-  'propertyViews',
-  'propertyRank',
-  'propertyPrice',
+  'carLikes',
+  'carViews',
+  'carRank',
+  'carPrice',
 ];
 export const availableBoardArticleSorts = ['createdAt', 'updatedAt', 'articleLikes', 'articleViews'];
 export const availableCommentSorts = ['createdAt', 'updatedAt'];

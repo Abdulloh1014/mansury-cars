@@ -14,62 +14,62 @@ export class CarUpdate {
 
     @IsOptional()
     @Field(() => CarType, { nullable: true })
-    propertyType?: CarType;
+    carType?: CarType;
 
     @IsOptional()
     @Field(() => CarStatus, { nullable: true })
-    propertyStatus?: CarStatus;
+    carStatus?: CarStatus;
 
     @IsOptional()
     @Field(() => CarLocation, { nullable: true })
-    propertyLocation?: CarLocation;
+    carLocation?: CarLocation;
     
     @IsOptional()
     @Length(3, 100)
     @Field(() => String, { nullable: true })
-    propertyAddress?: string;
+    carAddress?: string;
 
     @IsOptional()
     @Length(3, 100)
     @Field(() => String, { nullable: true })
-    propertyTitle?: string;
+    carTitle?: string;
 
     @IsOptional()
     @Field(() => Number, { nullable: true })
-    propertyPrice?: number;
+    carPrice?: number;
 
     @IsOptional()
     @Field(() => Number, { nullable: true })
-    propertySquare?: number;
+    carSquare?: number;
 
     @IsOptional()
     @IsInt()
     @Min(1)
     @Field(() => Int, { nullable: true})
-    propertyBeds?: number;
+    carBeds?: number;
 
     @IsOptional()
     @IsInt()
     @Min(1)
     @Field(() => Int, { nullable: true})
-    propertyRooms?: number;
+    carRooms?: number;
 
     @IsOptional()
     @Field(() => [String], { nullable: true })
-    propertyImages?: string[];
+    carImages?: string[];
 
     @IsOptional()
     @Length(5, 100)
     @Field(() => String, { nullable: true })
-    propertyDesc?: string;
+    carDesc?: string;
 
     @IsOptional()
     @Field(() => Boolean, { nullable: true })
-    propertyBarter?: boolean;
+    carBarter?: boolean;
 
     @IsOptional()
     @Field(() => Boolean, { nullable: true })
-    propertyRent?: boolean;
+    carRent?: boolean;
 
     soldAt?: Date;
 

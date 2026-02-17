@@ -1,13 +1,28 @@
 import { registerEnumType } from '@nestjs/graphql';
 
 export enum CarType {
-	APARTMENT = 'APARTMENT',
-	VILLA = 'VILLA',
-	HOUSE = 'HOUSE',
+    SEDAN = 'SEDAN',
+    SUV = 'SUV',
+    HATCHBACK = 'HATCHBACK',
+    COUPE = 'COUPE',
+    ELECTRIC = 'ELECTRIC',
+    PICKUP = 'PICKUP',
 }
 registerEnumType(CarType, {    //registerEnumType() TypeScript enum’ni GraphQL tushunishi uchun  majbur.
 	name: 'CarType',
 });
+
+
+export enum CarFuelType {
+	GASOLINE = 'GASOLINE',
+	DIESEL = 'DIESEL',
+	ELECTRIC = 'ELECTRIC',
+	HYBRID = 'HYBRID',
+}
+registerEnumType(CarFuelType, {
+	name: 'CarFuelType',
+});
+
 
 export enum CarStatus {
 	ACTIVE = 'ACTIVE',
@@ -17,6 +32,7 @@ export enum CarStatus {
 registerEnumType(CarStatus, {
 	name: 'CarStatus',
 });
+
 
 export enum CarLocation {
 	SEOUL = 'SEOUL',

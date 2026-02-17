@@ -1,6 +1,6 @@
 import { Field, InputType, Int } from "@nestjs/graphql";
 import { IsIn, IsInt, IsNotEmpty, IsOptional, Length, Min } from 'class-validator'
-import { CarLocation, CarStatus, CarType } from "../../enums/car.enum";
+import { CarFuelType, CarLocation, CarStatus, CarType } from "../../enums/car.enum";
 import { ObjectId } from "mongoose";
 import { availableOptions, availableCarSorts } from "../../config";
 import { Direction } from "../../enums/common.enum";
@@ -11,60 +11,58 @@ export class CarInput {
    
     @IsNotEmpty()
     @Field(() => CarType)
-    propertyType: CarType;
+    carType: CarType;
 
     @IsNotEmpty()
     @IsInt()
     @Min(0)
     @Field(() => Int)
-    propertyPrice: number;
+    carPrice: number;
 
     @IsNotEmpty()
     @Field(() => CarLocation)
-    propertyLocation: CarLocation;
+    carLocation: CarLocation;
 
     @IsNotEmpty()
     @Length(3, 100)
     @Field(() => String)
-    propertyAddress: string;
+    carAddress: string;
 
     @IsNotEmpty()
     @Length(3, 100)
     @Field(() => String)
-    propertyTitle: string;
+    carTitle: string;
 
     @IsNotEmpty()
     @Field(() => Number)
-    propertySquare: number;
+    carMileage: number;
+
+    @IsNotEmpty()
+    @Field(() => CarFuelType)
+    carFuelType: CarFuelType;
 
     @IsNotEmpty()
     @IsInt()
     @Min(1)
     @Field(() => Int)
-    propertyBeds: number;
-
-    @IsNotEmpty()
-    @IsInt()
-    @Min(1)
-    @Field(() => Int)
-    propertyRooms: number;
+    carDoors: number;
 
     @IsNotEmpty()
     @Field(() => [String])
-    propertyImages: string[];
+    carImages: string[];
 
     @IsOptional()
     @Length(5, 100)
     @Field(() => String, {nullable: true})
-    propertyDesc?: string;
+    carDesc?: string;
 
     @IsOptional()
     @Field(() => Boolean, {nullable: true})
-    propertyBarter?: boolean;
+    carBarter?: boolean;
 
     @IsOptional()
     @Field(() => Boolean, {nullable: true})
-    propertyRent?: boolean;
+    carRent?: boolean;
 
     memberId?: ObjectId;   // type lar crach bolmasligi uchun, 
 
@@ -84,7 +82,7 @@ export class PricesRange {
 }
 
 @InputType()
-export class SquaresRange {
+export class MileageRange {
     @Field(() => Int)
     start: number;
 
@@ -114,15 +112,18 @@ export class PISearch {
 
     @IsOptional()
     @Field(() => [CarType], {nullable: true})
-    typeList: CarType[];
+    typeList?: CarType[];
 
     @IsOptional()
     @Field(() => [Int], {nullable: true})
-    roomsList?: Number[];
+    doorsList?: number[]; // seatsList o'rniga eshiklar soni filtri
 
+    // @IsOptional()
+    // @Field(() => [String], {nullable: true})
+    // fuelTypeList?: string;
     @IsOptional()
-    @Field(() => [Int], {nullable: true})
-    bedsList?: Number[];
+    @Field(() => [CarFuelType], {nullable: true}) // String emas, Enum list!
+    fuelTypeList?: CarFuelType[];
 
     @IsOptional()
     @IsIn(availableOptions, {each: true})
@@ -138,8 +139,8 @@ export class PISearch {
     periodsRange?: PeriodsRange;
 
     @IsOptional()
-    @Field(() => SquaresRange, {nullable: true})
-    squaresRange?: SquaresRange;
+    @Field(() => MileageRange, {nullable: true})
+    mileageRange?: MileageRange;
 
     
     @IsOptional()
@@ -152,7 +153,7 @@ export class PISearch {
 
 
   @InputType()
-    export class PropertiesInquiry {
+    export class CarsInquiry {
         @IsNotEmpty()
         @Min(1)
         @Field(() => Int)
@@ -183,11 +184,11 @@ export class PISearch {
     class APISearch {
         @IsOptional()
         @Field(() => CarStatus, {nullable: true})
-        propertyStatus?: CarStatus;
+        carStatus?: CarStatus;
     }
 
     @InputType()
-    export class AgentPropertiesInquiry {
+    export class AgentCarsInquiry {
         @IsNotEmpty()
         @Min(1)
         @Field(() =>Int)
@@ -218,15 +219,15 @@ export class PISearch {
     class ALPISearch {
         @IsOptional()
         @Field(() => CarStatus, {nullable: true})
-        propertyStatus?: CarStatus;
+        carStatus?: CarStatus;
 
         @IsOptional()
         @Field(() => [CarLocation], {nullable: true})
-        propertyLocationList?: CarLocation[];
+        carLocationList?: CarLocation[];
     }
 
     @InputType()
-    export class AllPropertiesInquiry {
+    export class AllCarsInquiry {
          @IsNotEmpty()
          @Min(1)
          @Field(() => Int)

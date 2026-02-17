@@ -9,17 +9,17 @@ import { Model } from 'mongoose';
 @Injectable()
 export class BatchService {
   constructor(
-    @InjectModel('Car') private readonly propertyModel: Model<Car>,
+    @InjectModel('Car') private readonly carModel: Model<Car>,
     @InjectModel('Member') private readonly memberModel: Model<Member>
   ){}
   
   public async batchRollback(): Promise<void> {
-    await this.propertyModel
+    await this.carModel
       .updateMany(
         {
-          propertyStatus: CarStatus.ACTIVE,
+          carStatus: CarStatus.ACTIVE,
         },
-        { propertyRank: 0 },
+        { carRank: 0 },
       )
        .exec();
 
@@ -35,17 +35,17 @@ export class BatchService {
   }
   
   public async batchTopProperties(): Promise<void> {
-    const properties: Car[] = await this.propertyModel
+    const properties: Car[] = await this.carModel
     .find({
-      propertyStatus: CarStatus.ACTIVE,
-      propertyRank: 0,
+      carStatus: CarStatus.ACTIVE,
+      carRank: 0,
     })
     .exec();
 
     const promisedList = properties.map(async (ele: Car) => {
-      const { _id, propertyLikes, propertyViews } = ele;
-      const rank = propertyLikes * 2 + propertyViews * 1;
-      return await this.propertyModel.findByIdAndUpdate(_id, { propertyRank: rank });
+      const { _id, carLikes, carViews } = ele;
+      const rank = carLikes * 2 + carViews * 1;
+      return await this.carModel.findByIdAndUpdate(_id, { carRank: rank });
     });
     await Promise.all(promisedList);
     

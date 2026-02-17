@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, InternalServerErrorException } from '@
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
 import { Direction, Message } from '../../libs/enums/common.enum';
-import { AgentPropertiesInquiry, AllPropertiesInquiry, OrdinaryInquiry, PropertiesInquiry, CarInput } from '../../libs/dto/car/car.input';
+import { AgentCarsInquiry, AllCarsInquiry, OrdinaryInquiry, CarsInquiry, CarInput } from '../../libs/dto/car/car.input';
 import { Properties, Car } from '../../libs/dto/car/car';
 import { MemberService } from '../member/member.service';
 import { ViewService } from '../view/view.service';
@@ -22,7 +22,7 @@ export class CarService {
   Car(): Car | PromiseLike<Car> {
     throw new Error('Method not implemented.');
   }
-    constructor(@InjectModel('Car') private readonly propertyModel: Model<Car>,
+    constructor(@InjectModel('Car') private readonly carModel: Model<Car>,
       private memberService: MemberService,
       private viewService: ViewService,
       private likeService: LikeService
@@ -30,7 +30,7 @@ export class CarService {
 
    public async createCar(input: CarInput): Promise<Car>{ 
     try{
-      const result = await this.propertyModel.create(input);
+      const result = await this.carModel.create(input);
       // increase memberProperties +1
       await this.memberService.memberStatsEditor({
         _id: result.memberId,
@@ -46,29 +46,29 @@ export class CarService {
    }
 
 
-   public async getCar(memberId: ObjectId, propertyId: ObjectId): Promise<Car> {
+   public async getCar(memberId: ObjectId, carId: ObjectId): Promise<Car> {
     const search: T = {
-      _id: propertyId,    // biz ko'rmoqschi bo‘lgan propertyId
-      propertyStatus: CarStatus.ACTIVE, // faqat ACTIVE holatdagi propertylarni ko‘rsatilishi kerak
+      _id: carId,    // biz ko'rmoqschi bo‘lgan carId
+      carStatus: CarStatus.ACTIVE, // faqat ACTIVE holatdagi carlarni ko‘rsatilishi kerak
     };
 
-    const targetCar: Car = await this.propertyModel.findOne(search).lean().exec();
+    const targetCar: Car = await this.carModel.findOne(search).lean().exec();
     // lean() → Mongoose hujjatini oddiy JS object qilib beradi. Bu o‘qish tezligini oshiradi va xotira sarfini kamaytiradi.
     if(!targetCar) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
  
     if(memberId) {
       const viewInput = { 
         memberId: memberId,               // kim ko‘rdi
-        viewRefId: propertyId,            // qaysi car ko‘rildi
-        viewGroup: ViewGroup.PROPERTY};   // qaysi tur (PROPERTY)
+        viewRefId: carId,            // qaysi car ko‘rildi
+        viewGroup: ViewGroup.CAR};   // qaysi tur (CAR)
       const newView = await this.viewService.recordView(viewInput);
       if(newView) {
-        await this.propertyStatsEditor({ _id: propertyId, targetKey: 'propertyViews', modifier: 1});
-        targetCar.propertyViews++;
+        await this.carStatsEditor({ _id: carId, targetKey: 'carViews', modifier: 1});
+        targetCar.carViews++;
       }
 
       // meLiked
-            const likeInput = {memberId: memberId, likeRefId: propertyId, likeGroup: LikeGroup.PROPERTY};
+            const likeInput = {memberId: memberId, likeRefId: carId, likeGroup: LikeGroup.CAR};
             targetCar.meLiked = await this.likeService.checkLikeExistence(likeInput);
     }
 
@@ -80,20 +80,20 @@ export class CarService {
    
 
    public async updateCar(memberId: ObjectId, input: CarUpdate): Promise<Car> {
-    let { propertyStatus, soldAt, deletedAt } = input;
+    let { carStatus, soldAt, deletedAt } = input;
     const search: T = {
-      _id: input._id,       // yangilamoqchi bo‘lgan propertyId
-      memberId: memberId,   // kirib kelyotgan agent o‘zining propertysini yangilashi mumkin
-      propertyStatus: CarStatus.ACTIVE,   // faqat ACTIVE holatdagi propertylarni yangilashi mumkin
+      _id: input._id,       // yangilamoqchi bo‘lgan carId
+      memberId: memberId,   // kirib kelyotgan agent o‘zining carsini yangilashi mumkin
+      carStatus: CarStatus.ACTIVE,   // faqat ACTIVE holatdagi carlarni yangilashi mumkin
     };
 
-    if (propertyStatus === CarStatus.SOLD ) soldAt = moment().toDate();
-    // agar propertyStatus SOLD ga o‘zgartirilsa, soldAt maydonini hozirgi sana bilan to‘ldirish
+    if (carStatus === CarStatus.SOLD ) soldAt = moment().toDate();
+    // agar carStatus SOLD ga o‘zgartirilsa, soldAt maydonini hozirgi sana bilan to‘ldirish
     
-    else if ( propertyStatus === CarStatus.DELETE) deletedAt = moment().toDate();
-    // agar propertyStatus DELETE ga o‘zgartirilsa, deletedAt maydonini hozirgi sana bilan to‘ldirish
+    else if ( carStatus === CarStatus.DELETE) deletedAt = moment().toDate();
+    // agar carStatus DELETE ga o‘zgartirilsa, deletedAt maydonini hozirgi sana bilan to‘ldirish
 
-    const result = await this.propertyModel
+    const result = await this.carModel
     .findByIdAndUpdate(search, input, {
       new: true,
     })
@@ -112,14 +112,14 @@ export class CarService {
   }
 
 
-  public async getProperties (memberId: ObjectId, input: PropertiesInquiry): Promise<Properties> {
-    const match: T = {propertyStatus: CarStatus.ACTIVE};
+  public async getProperties (memberId: ObjectId, input: CarsInquiry): Promise<Properties> {
+    const match: T = {carStatus: CarStatus.ACTIVE};
     const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
 
     this.shapeMatchQuery(match, input)
     console.log('match:', match)
 
-    const result = await this.propertyModel
+    const result = await this.carModel
        .aggregate([
         { $match: match },
         { $sort: sort },
@@ -143,30 +143,30 @@ export class CarService {
      return result[0];
   }
 
-  private shapeMatchQuery(match: T, input: PropertiesInquiry): void {
+  private shapeMatchQuery(match: T, input: CarsInquiry): void {
   const {
     memberId,
     locationList,
-    roomsList,
-    bedsList,
+    doorsList,
+    fuelTypeList,
     typeList,
     periodsRange,
     pricesRange,
-    squaresRange,
+    mileageRange,
     options,
     text,
   } = input.search;
 
   if (memberId) match.memberId = shapeIntoMongoObjectId(memberId);
-  if (locationList && locationList.length) match.propertyLocation = { $in: locationList };
-  if (roomsList && roomsList.length) match.propertyRooms = { $in: roomsList };
-  if (bedsList && bedsList.length) match.propertyBeds = { $in: bedsList };
-  if (typeList && typeList.length) match.propertyType = { $in: typeList };
+  if (locationList && locationList.length) match.carLocation = { $in: locationList };
+  if (doorsList && doorsList.length) match.carDoors = { $in: doorsList };
+  if (fuelTypeList && fuelTypeList.length) match.carFuelType = { $in: fuelTypeList };
+  if (typeList && typeList.length) match.carType = { $in: typeList };
   
-  if (pricesRange) match.propertyPrice = { $gte: pricesRange.start, $lte: pricesRange.end };
+  if (pricesRange) match.carPrice = { $gte: pricesRange.start, $lte: pricesRange.end };
   if (periodsRange) match.createdAt = { $gte: periodsRange.start, $lte: periodsRange.end };
-  if (squaresRange) match.propertySquare = { $gte: squaresRange.start, $lte: squaresRange.end };
-  if (text) match.propertyTitle = { $regex: new RegExp(text, 'i') };
+  if (mileageRange) match.carMileage = { $gte: mileageRange.start, $lte: mileageRange.end };
+  if (text) match.carTitle = { $regex: new RegExp(text, 'i') };
   if (options) {
     match['$or'] = options.map((ele) => {
       return { [ele]: true };
@@ -183,17 +183,17 @@ public async getVisited(memberId: ObjectId, input: OrdinaryInquiry): Promise<Pro
 }
 
 
-public async getAgentProperties(memberId: ObjectId, input: AgentPropertiesInquiry): Promise<Properties> {
-  const { propertyStatus } = input.search;
-  if (propertyStatus === CarStatus.DELETE) throw new BadRequestException(Message.NOT_ALLOWED_REQUEST);
+public async getAgentProperties(memberId: ObjectId, input: AgentCarsInquiry): Promise<Properties> {
+  const { carStatus } = input.search;
+  if (carStatus === CarStatus.DELETE) throw new BadRequestException(Message.NOT_ALLOWED_REQUEST);
 
   const match: T = {
     memberId: memberId,
-    propertyStatus: propertyStatus ?? { $ne: CarStatus.DELETE }, 
+    carStatus: carStatus ?? { $ne: CarStatus.DELETE }, 
   };
   const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC};
 
-  const result = await this.propertyModel
+  const result = await this.carModel
        .aggregate([
         { $match: match },
         { $sort: sort },
@@ -218,21 +218,21 @@ public async getAgentProperties(memberId: ObjectId, input: AgentPropertiesInquir
 
 
 public async likeTargetCar(memberId: ObjectId, likeRefId: ObjectId): Promise<Car> {
-    const target: Car = await this.propertyModel
-    .findOne({ _id: likeRefId, propertyStatus: CarStatus.ACTIVE })
+    const target: Car = await this.carModel
+    .findOne({ _id: likeRefId, carStatus: CarStatus.ACTIVE })
     .exec();
     if (!target) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 
     const input: LikeInput = {
         memberId: memberId,
         likeRefId: likeRefId,
-        likeGroup: LikeGroup.PROPERTY,
+        likeGroup: LikeGroup.CAR,
     };
 
 
     // LIKE TOGGLE via Like Modules
     const modifier : number = await this.likeService.toggleLike(input);
-    const result = await this.propertyStatsEditor({ _id: likeRefId, targetKey: 'propertyLikes', modifier: modifier });
+    const result = await this.carStatsEditor({ _id: likeRefId, targetKey: 'carLikes', modifier: modifier });
     if (!result) throw new InternalServerErrorException(Message.SOMETHING_WENT_WRONG)
         return result;
     
@@ -243,15 +243,15 @@ public async likeTargetCar(memberId: ObjectId, likeRefId: ObjectId): Promise<Car
 
 /** ADMIN  **/
 
-public async getAllPropertiesByAdmin(input: AllPropertiesInquiry): Promise<Properties> {
-  const { propertyStatus, propertyLocationList } = input.search;
+public async getAllPropertiesByAdmin(input: AllCarsInquiry): Promise<Properties> {
+  const { carStatus, carLocationList } = input.search;
   const match: T = {};
   const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC};
 
-  if (propertyStatus) match.propertyStatus = propertyStatus;
-  if (propertyLocationList) match.propertyLocation = { $in: propertyLocationList};
+  if (carStatus) match.carStatus = carStatus;
+  if (carLocationList) match.carLocation = { $in: carLocationList};
 
-  const result = await this.propertyModel
+  const result = await this.carModel
        .aggregate([
         { $match: match },
         { $sort: sort },
@@ -277,16 +277,16 @@ public async getAllPropertiesByAdmin(input: AllPropertiesInquiry): Promise<Prope
 
 
 public async updateCarByAdmin(input: CarUpdate): Promise<Car> {
-  let { propertyStatus, soldAt, deletedAt } = input;
+  let { carStatus, soldAt, deletedAt } = input;
   const search: T = {
     _id: input._id,
-    propertyStatus: CarStatus.ACTIVE,
+    carStatus: CarStatus.ACTIVE,
   };
 
-  if (propertyStatus === CarStatus.SOLD) soldAt = moment().toDate();
-  else if (propertyStatus === CarStatus.DELETE) deletedAt = moment().toDate();
+  if (carStatus === CarStatus.SOLD) soldAt = moment().toDate();
+  else if (carStatus === CarStatus.DELETE) deletedAt = moment().toDate();
 
-  const result = await this.propertyModel.
+  const result = await this.carModel.
   findOneAndUpdate(search, input, {
     new: true,
   })
@@ -306,18 +306,18 @@ public async updateCarByAdmin(input: CarUpdate): Promise<Car> {
 }
 
 
-public async removeCarByAdmin(propertyId: ObjectId): Promise<Car> {
-  const search: T = { _id: propertyId, propertyStatus: CarStatus.DELETE };
-  const result = await this.propertyModel.findOneAndDelete(search).exec();
+public async removeCarByAdmin(carId: ObjectId): Promise<Car> {
+  const search: T = { _id: carId, carStatus: CarStatus.DELETE };
+  const result = await this.carModel.findOneAndDelete(search).exec();
   if(!result) throw new InternalServerErrorException(Message.REMOVE_FAILED);
 
   return result;
 }
 
 
-public async propertyStatsEditor(input: StatisticModifier): Promise<Car> {
+public async carStatsEditor(input: StatisticModifier): Promise<Car> {
     const { _id, targetKey, modifier } = input;
-    return await this.propertyModel
+    return await this.carModel
        .findByIdAndUpdate(
         _id,
         { $inc: { [targetKey]: modifier } },

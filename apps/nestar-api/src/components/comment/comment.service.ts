@@ -18,7 +18,7 @@ export class CommentService {
     constructor(
         @InjectModel('Comment') private readonly commentModel: Model<Comment>,
         private readonly memberService: MemberService,
-        private readonly propertyService: CarService,
+        private readonly carService: CarService,
         private readonly boardArticleService: BoardArticleService,
     ) {}
 
@@ -35,10 +35,10 @@ export class CommentService {
         }
 
         switch (input.commentGroup) {
-            case CommentGroup.PROPERTY:
-                await this.propertyService.propertyStatsEditor({
+            case CommentGroup.CAR:
+                await this.carService.carStatsEditor({
                     _id: input.commentRefId,
-                    targetKey: 'propertyComments',
+                    targetKey: 'carComments',
                     modifier: 1,
                 });
                 break;

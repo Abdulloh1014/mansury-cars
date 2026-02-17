@@ -1,7 +1,7 @@
 import { Args, Mutation, Resolver, Query } from '@nestjs/graphql';
 import { CarService } from './car.service';
 import { Properties, Car } from '../../libs/dto/car/car';
-import { AgentPropertiesInquiry, AllPropertiesInquiry, OrdinaryInquiry, PropertiesInquiry, CarInput } from '../../libs/dto/car/car.input';
+import { AgentCarsInquiry, AllCarsInquiry, OrdinaryInquiry, CarsInquiry, CarInput } from '../../libs/dto/car/car.input';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { UseGuards } from '@nestjs/common';
 import { MemberType } from '../../libs/enums/member.enum';
@@ -15,7 +15,7 @@ import { AuthGuard } from '../auth/guards/auth.guard';
 
 @Resolver()
 export class CarResolver {
-        constructor(private readonly propertyService: CarService) {}
+        constructor(private readonly carService: CarService) {}
    
         @Roles(MemberType.AGENT)
         @UseGuards(RolesGuard)
@@ -25,19 +25,19 @@ export class CarResolver {
         @AuthMember('_id') memberId: ObjectId): Promise<Car> {
             console.log("Mutation: createCar");
             input.memberId = memberId;
-            return await this.propertyService.createCar(input);
+            return await this.carService.createCar(input);
       }
 
 
       @UseGuards(WithoutGuard)
       @Query((returns) => Car)
       public async getCar(
-        @Args('propertyId') input: string,
+        @Args('carId') input: string,
         @AuthMember('_id') memberId: ObjectId,
       ): Promise<Car> {
         console.log('Query: getCar');
-        const propertyId = shapeIntoMongoObjectId(input);
-        return await this.propertyService.getCar(memberId, propertyId);
+        const carId = shapeIntoMongoObjectId(input);
+        return await this.carService.getCar(memberId, carId);
       }
 
       @Roles(MemberType.AGENT)
@@ -49,18 +49,18 @@ export class CarResolver {
       ): Promise<Car> {
         console.log('Mutation: updateCar');
         input._id = shapeIntoMongoObjectId(input._id);
-        return await this.propertyService.updateCar(memberId, input)
+        return await this.carService.updateCar(memberId, input)
       }
 
 
       @UseGuards(WithoutGuard)
       @Query((returns) => Properties)
       public async getProperties(
-        @Args('input') input: PropertiesInquiry,
+        @Args('input') input: CarsInquiry,
         @AuthMember('_id') memberId: ObjectId,
       ): Promise<Properties> {
         console.log('Query: getProperties');
-        return await this.propertyService.getProperties(memberId, input)
+        return await this.carService.getProperties(memberId, input)
       }
 
       @UseGuards(AuthGuard)
@@ -70,7 +70,7 @@ export class CarResolver {
         @AuthMember('_id') memberId: ObjectId,
       ): Promise<Properties> {
         console.log('Query: getFavorites');
-        return await this.propertyService.getFavorites(memberId, input)
+        return await this.carService.getFavorites(memberId, input)
       }
 
       @UseGuards(AuthGuard)
@@ -80,7 +80,7 @@ export class CarResolver {
         @AuthMember('_id') memberId: ObjectId,
       ): Promise<Properties> {
         console.log('Query: getVisited');
-        return await this.propertyService.getVisited(memberId, input)
+        return await this.carService.getVisited(memberId, input)
       }
 
 
@@ -88,11 +88,11 @@ export class CarResolver {
       @UseGuards(RolesGuard)
       @Query((returns) => Properties)
       public async getAgentProperties(
-        @Args('input') input: AgentPropertiesInquiry,
+        @Args('input') input: AgentCarsInquiry,
         @AuthMember('_id') memberId: ObjectId,
       ): Promise<Properties> {
         console.log("Query: getAgentProperties");
-        return await this.propertyService.getAgentProperties(memberId, input);
+        return await this.carService.getAgentProperties(memberId, input);
       }
 
 
@@ -100,12 +100,12 @@ export class CarResolver {
      @UseGuards(AuthGuard)
      @Mutation(() => Car)
      public async likeTargetCar(
-        @Args('propertyId') input: string,
+        @Args('carId') input: string,
         @AuthMember('_id') memberId: ObjectId,
      ): Promise<Car> {
         console.log("Mutation: likeTargetCar");
         const likeRefId = shapeIntoMongoObjectId(input);
-        return await this.propertyService.likeTargetCar(memberId, likeRefId);
+        return await this.carService.likeTargetCar(memberId, likeRefId);
      }
 
 
@@ -117,11 +117,11 @@ export class CarResolver {
       @UseGuards(RolesGuard)
       @Query((returns) => Properties)
       public async getAllPropertiesByAdmin(
-        @Args('input') input: AllPropertiesInquiry,
+        @Args('input') input: AllCarsInquiry,
         @AuthMember('_id') memberId: ObjectId,
       ): Promise<Properties> {
         console.log("Query: getAllPropertiesByAdmin")
-        return await this.propertyService.getAllPropertiesByAdmin(input);
+        return await this.carService.getAllPropertiesByAdmin(input);
       }
 
 
@@ -132,7 +132,7 @@ export class CarResolver {
         @Args('input') input: CarUpdate): Promise<Car> {
         console.log("Mutation: updateCarByAdmin");
         input._id = shapeIntoMongoObjectId(input._id)
-        return await this.propertyService.updateCarByAdmin(input);
+        return await this.carService.updateCarByAdmin(input);
       }
 
 
@@ -140,10 +140,10 @@ export class CarResolver {
       @UseGuards(RolesGuard)
       @Mutation((returns) => Car)
       public async removeCarByAdmin(
-        @Args('propertyId') input: string): Promise<Car> {
+        @Args('carId') input: string): Promise<Car> {
         console.log("Mutation: removeCarByAdmin");
-        const propertyId = shapeIntoMongoObjectId(input)
-        return await this.propertyService.removeCarByAdmin(propertyId);
+        const carId = shapeIntoMongoObjectId(input)
+        return await this.carService.removeCarByAdmin(carId);
       }
 
 }
