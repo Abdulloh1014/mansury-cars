@@ -5,9 +5,9 @@ import { Like, MeLiked } from '../../libs/dto/like/like';
 import { LikeInput } from '../../libs/dto/like/like.input';
 import { T } from '../../libs/types/common';
 import { Message } from '../../libs/enums/common.enum';
-import { OrdinaryInquiry } from '../../libs/dto/ptoperty/property.input';
+import { OrdinaryInquiry } from '../../libs/dto/car/car.input';
 import { LikeGroup } from '../../libs/enums/like.enum';
-import { Properties } from '../../libs/dto/ptoperty/property';
+import { Properties } from '../../libs/dto/car/car';
 import { lookupFavorite } from '../../libs/config';
 
 @Injectable()
@@ -53,17 +53,17 @@ export class LikeService {
                     from: 'properties',
                     localField: 'likeRefId',
                     foreignField: '_id',
-                    as: 'favoriteProperty',
-                },      // Bu orqali like qilingan property ni olib kelayapsiz.
+                    as: 'favoriteCar',
+                },      // Bu orqali like qilingan car ni olib kelayapsiz.
             },
-            { $unwind: '$favoriteProperty'},
+            { $unwind: '$favoriteCar'},
             {
                 $facet: {
                     list: [
                         {$skip: (page-1)*limit},
                         {$limit: limit},
                         lookupFavorite,
-                        { $unwind: '$favoriteProperty.memberData'},
+                        { $unwind: '$favoriteCar.memberData'},
                     ],             // $ belgisi MongoDB aggregation ichida field referensiyasini bildiradi:
                     metaCounter: [{ $count: 'total' }],
                 },
@@ -75,11 +75,11 @@ export class LikeService {
         //Ya’ni pipeline natijasini ishlatishga qulay formatga keltirad
 
 
-        result.list = data[0].list.map((ele) => ele.favoriteProperty);
-        //Bu kod aggregation natijasidan haqiqiy property obyektlarini ajratib oladi.
+        result.list = data[0].list.map((ele) => ele.favoriteCar);
+        //Bu kod aggregation natijasidan haqiqiy car obyektlarini ajratib oladi.
         //data[0].list → $facet ichidagi list
-        //.map((ele) => ele.favoriteProperty) → har bir elementdan favoriteProperty ni oladi
-        //Endi result.list faqat property obyektlaridan iborat bo‘ladi.
+        //.map((ele) => ele.favoriteCar) → har bir elementdan favoriteCar ni oladi
+        //Endi result.list faqat car obyektlaridan iborat bo‘ladi.
 
 
 

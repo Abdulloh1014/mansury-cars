@@ -5,7 +5,7 @@ import { ObjectId } from 'bson';
 export const availableAgentStors = ['createdAt', 'updatedAt', 'memberLikes', 'memberViews', 'memberRank']
 export const availableMembersStors = ['createdAt', 'updatedAt', 'memberLikes', 'memberViews']
 export const availableOptions = ['propertyBarter', 'propertyRent'];
-export const availablePropertySorts = [
+export const availableCarSorts = [
    'createdAt',
   'updatedAt',
   'propertyLikes',
@@ -134,18 +134,18 @@ export const lookupFollowerData = {
 export const lookupFavorite = {
 	$lookup: {
 		from: 'members',           
-		localField: 'favoriteProperty.memberId',	
+		localField: 'favoriteCar.memberId',	
 		foreignField: '_id',       
-		as: 'favoriteProperty.memberData',          
+		as: 'favoriteCar.memberData',          
 	},
 };
 
 export const lookupVisit = {
 	$lookup: {
 		from: 'members',           
-		localField: 'visitedProperty.memberId',	// property egasini Id si
+		localField: 'visitedCar.memberId',	// car egasini Id si
 		foreignField: '_id',       
-		as: 'visitedProperty.memberData',          
+		as: 'visitedCar.memberData',          
 	},
 };
 

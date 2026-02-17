@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { PropertyResolver } from './property.resolver';
-import { PropertyService } from './property.service';
+import { CarResolver } from './car.resolver';
+import { CarService } from './car.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import PropertySchema from '../../schemas/Property.model';
+import CarSchema from '../../schemas/Car.model';
 import { AuthModule } from '../auth/auth.module';
 import { ViewModule } from '../view/view.module';
 import { MemberService } from '../member/member.service';
@@ -13,8 +13,8 @@ import { LikeModule } from '../like/like.module';
     imports:[    //forFeature — kerakli model yoki funksiyani faqat shu modul ichida ishlashi uchun ulab beradi.
     MongooseModule.forFeature([
       {
-        name: "Property", 
-        schema: PropertySchema
+        name: "Car", 
+        schema: CarSchema
       },
     ]), 
     AuthModule,
@@ -22,8 +22,8 @@ import { LikeModule } from '../like/like.module';
     MemberModule,
     LikeModule,
   ],
-  providers: [PropertyResolver, PropertyService],
-  exports: [PropertyService],
+  providers: [CarResolver, CarService],
+  exports: [CarService],
   
 })
-export class PropertyModule {}
+export class CarModule {}

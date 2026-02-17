@@ -11,7 +11,7 @@ import { ObjectId } from "mongoose";
 export class MemberUpdate {
 
     @IsNotEmpty()
-    @Field(() => String)     //@Field — property’ni GraphQL maydoniga aylantiradi.
+    @Field(() => String)     //@Field — car’ni GraphQL maydoniga aylantiradi.
     _id: ObjectId;
 
     

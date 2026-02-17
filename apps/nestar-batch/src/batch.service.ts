@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Member } from 'apps/nestar-api/src/libs/dto/member/member';
-import { Property } from 'apps/nestar-api/src/libs/dto/ptoperty/property';
+import { Car } from 'apps/nestar-api/src/libs/dto/ptoperty/car';
 import { MemberStatus, MemberType } from 'apps/nestar-api/src/libs/enums/member.enum';
-import { PropertyStatus } from 'apps/nestar-api/src/libs/enums/property.enum';
+import { CarStatus } from 'apps/nestar-api/src/libs/enums/car.enum';
 import { Model } from 'mongoose';
 
 @Injectable()
 export class BatchService {
   constructor(
-    @InjectModel('Property') private readonly propertyModel: Model<Property>,
+    @InjectModel('Car') private readonly propertyModel: Model<Car>,
     @InjectModel('Member') private readonly memberModel: Model<Member>
   ){}
   
@@ -17,7 +17,7 @@ export class BatchService {
     await this.propertyModel
       .updateMany(
         {
-          propertyStatus: PropertyStatus.ACTIVE,
+          propertyStatus: CarStatus.ACTIVE,
         },
         { propertyRank: 0 },
       )
@@ -35,14 +35,14 @@ export class BatchService {
   }
   
   public async batchTopProperties(): Promise<void> {
-    const properties: Property[] = await this.propertyModel
+    const properties: Car[] = await this.propertyModel
     .find({
-      propertyStatus: PropertyStatus.ACTIVE,
+      propertyStatus: CarStatus.ACTIVE,
       propertyRank: 0,
     })
     .exec();
 
-    const promisedList = properties.map(async (ele: Property) => {
+    const promisedList = properties.map(async (ele: Car) => {
       const { _id, propertyLikes, propertyViews } = ele;
       const rank = propertyLikes * 2 + propertyViews * 1;
       return await this.propertyModel.findByIdAndUpdate(_id, { propertyRank: rank });

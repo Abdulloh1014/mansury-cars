@@ -1,17 +1,17 @@
 import { Field, InputType, Int } from "@nestjs/graphql";
 import { IsIn, IsInt, IsNotEmpty, IsOptional, Length, Min } from 'class-validator'
-import { PropertyLocation, PropertyStatus, PropertyType } from "../../enums/property.enum";
+import { CarLocation, CarStatus, CarType } from "../../enums/car.enum";
 import { ObjectId } from "mongoose";
-import { availableOptions, availablePropertySorts } from "../../config";
+import { availableOptions, availableCarSorts } from "../../config";
 import { Direction } from "../../enums/common.enum";
 
 
 @InputType()
-export class PropertyInput {
+export class CarInput {
    
     @IsNotEmpty()
-    @Field(() => PropertyType)
-    propertyType: PropertyType;
+    @Field(() => CarType)
+    propertyType: CarType;
 
     @IsNotEmpty()
     @IsInt()
@@ -20,8 +20,8 @@ export class PropertyInput {
     propertyPrice: number;
 
     @IsNotEmpty()
-    @Field(() => PropertyLocation)
-    propertyLocation: PropertyLocation;
+    @Field(() => CarLocation)
+    propertyLocation: CarLocation;
 
     @IsNotEmpty()
     @Length(3, 100)
@@ -109,12 +109,12 @@ export class PISearch {
     memberId: ObjectId;
 
     @IsOptional()
-    @Field(() => [PropertyLocation], {nullable: true})
-    locationList?: PropertyLocation[];
+    @Field(() => [CarLocation], {nullable: true})
+    locationList?: CarLocation[];
 
     @IsOptional()
-    @Field(() => [PropertyType], {nullable: true})
-    typeList: PropertyType[];
+    @Field(() => [CarType], {nullable: true})
+    typeList: CarType[];
 
     @IsOptional()
     @Field(() => [Int], {nullable: true})
@@ -165,7 +165,7 @@ export class PISearch {
         limit: number;
 
         @IsOptional()
-        @IsIn(availablePropertySorts)
+        @IsIn(availableCarSorts)
         @Field(() => String, {nullable: true})
         sort?: string;
 
@@ -182,8 +182,8 @@ export class PISearch {
     @InputType()
     class APISearch {
         @IsOptional()
-        @Field(() => PropertyStatus, {nullable: true})
-        propertyStatus?: PropertyStatus;
+        @Field(() => CarStatus, {nullable: true})
+        propertyStatus?: CarStatus;
     }
 
     @InputType()
@@ -200,7 +200,7 @@ export class PISearch {
         limit: number;
 
         @IsOptional()
-        @IsIn(availablePropertySorts)
+        @IsIn(availableCarSorts)
         @Field(() => String, {nullable: true})
         sort?: string;
 
@@ -217,12 +217,12 @@ export class PISearch {
      @InputType()
     class ALPISearch {
         @IsOptional()
-        @Field(() => PropertyStatus, {nullable: true})
-        propertyStatus?: PropertyStatus;
+        @Field(() => CarStatus, {nullable: true})
+        propertyStatus?: CarStatus;
 
         @IsOptional()
-        @Field(() => [PropertyLocation], {nullable: true})
-        propertyLocationList?: PropertyLocation[];
+        @Field(() => [CarLocation], {nullable: true})
+        propertyLocationList?: CarLocation[];
     }
 
     @InputType()
@@ -238,7 +238,7 @@ export class PISearch {
          limit: number;
 
          @IsOptional()
-         @IsIn(availablePropertySorts)
+         @IsIn(availableCarSorts)
          @Field(() => String, { nullable: true })
          sort?: string;
 

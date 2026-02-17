@@ -11,7 +11,7 @@ import { MeFollowed } from '../follow/follow';
 
 @ObjectType()
 export class Member {
-  @Field(() => String)     //@Field — property’ni GraphQL maydoniga aylantiradi.
+  @Field(() => String)     //@Field — car’ni GraphQL maydoniga aylantiradi.
   _id: ObjectId;
 
   @Field(() => MemberType)

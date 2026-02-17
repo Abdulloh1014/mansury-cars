@@ -1,28 +1,28 @@
 import { Field, InputType, Int } from "@nestjs/graphql";
 import { IsInt, IsNotEmpty, IsOptional, Length, Min } from "class-validator";
 import { ObjectId } from "mongoose";
-import { PropertyLocation, PropertyStatus, PropertyType } from "../../enums/property.enum";
+import { CarLocation, CarStatus, CarType } from "../../enums/car.enum";
 
 
 
 
 @InputType()
-export class PropertyUpdate {
+export class CarUpdate {
     @IsNotEmpty()
     @Field(() => String)
     _id: ObjectId;
 
     @IsOptional()
-    @Field(() => PropertyType, { nullable: true })
-    propertyType?: PropertyType;
+    @Field(() => CarType, { nullable: true })
+    propertyType?: CarType;
 
     @IsOptional()
-    @Field(() => PropertyStatus, { nullable: true })
-    propertyStatus?: PropertyStatus;
+    @Field(() => CarStatus, { nullable: true })
+    propertyStatus?: CarStatus;
 
     @IsOptional()
-    @Field(() => PropertyLocation, { nullable: true })
-    propertyLocation?: PropertyLocation;
+    @Field(() => CarLocation, { nullable: true })
+    propertyLocation?: CarLocation;
     
     @IsOptional()
     @Length(3, 100)

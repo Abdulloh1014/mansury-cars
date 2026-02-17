@@ -1,24 +1,24 @@
 
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { ObjectId } from 'mongoose';
-import { PropertyLocation, PropertyStatus, PropertyType } from '../../enums/property.enum';
+import { CarLocation, CarStatus, CarType } from '../../enums/car.enum';
 import { Member, TotalCounter } from '../member/member';
 import { MeLiked } from '../like/like';
 
 
 @ObjectType()
-export class Property {
-  @Field(() => String)     //@Field — property’ni GraphQL maydoniga aylantiradi.
+export class Car {
+  @Field(() => String)     //@Field — car’ni GraphQL maydoniga aylantiradi.
   _id: ObjectId;
 
-   @Field(() => PropertyType)
-  propertyType: PropertyType;
+   @Field(() => CarType)
+  propertyType: CarType;
 
-   @Field(() => PropertyStatus)
-  propertyStatus: PropertyStatus;
+   @Field(() => CarStatus)
+  propertyStatus: CarStatus;
 
-   @Field(() => PropertyLocation)
-  propertyLocation: PropertyLocation;
+   @Field(() => CarLocation)
+  propertyLocation: CarLocation;
 
    @Field(() => String)
   propertyAddress: string;
@@ -94,8 +94,8 @@ export class Property {
 
 @ObjectType()
 export class Properties {
-  @Field(() => [Property])
-  list: Property[];
+  @Field(() => [Car])
+  list: Car[];
 
   @Field(() => [TotalCounter], {nullable: true})
   metaCounter: TotalCounter[];

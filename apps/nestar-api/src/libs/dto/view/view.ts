@@ -5,7 +5,7 @@ import { ViewGroup } from '../../enums/view.enum';
 
 @ObjectType()
 export class View {
-  @Field(() => String)     //@Field — property’ni GraphQL maydoniga aylantiradi.
+  @Field(() => String)     //@Field — car’ni GraphQL maydoniga aylantiradi.
   _id: ObjectId;
 
   @Field(() => ViewGroup)

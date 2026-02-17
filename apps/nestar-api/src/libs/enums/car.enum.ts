@@ -1,24 +1,24 @@
 import { registerEnumType } from '@nestjs/graphql';
 
-export enum PropertyType {
+export enum CarType {
 	APARTMENT = 'APARTMENT',
 	VILLA = 'VILLA',
 	HOUSE = 'HOUSE',
 }
-registerEnumType(PropertyType, {    //registerEnumType() TypeScript enum’ni GraphQL tushunishi uchun  majbur.
-	name: 'PropertyType',
+registerEnumType(CarType, {    //registerEnumType() TypeScript enum’ni GraphQL tushunishi uchun  majbur.
+	name: 'CarType',
 });
 
-export enum PropertyStatus {
+export enum CarStatus {
 	ACTIVE = 'ACTIVE',
 	SOLD = 'SOLD',
 	DELETE = 'DELETE',
 }
-registerEnumType(PropertyStatus, {
-	name: 'PropertyStatus',
+registerEnumType(CarStatus, {
+	name: 'CarStatus',
 });
 
-export enum PropertyLocation {
+export enum CarLocation {
 	SEOUL = 'SEOUL',
 	BUSAN = 'BUSAN',
 	INCHEON = 'INCHEON',
@@ -29,6 +29,6 @@ export enum PropertyLocation {
 	DAEJON = 'DAEJON',
 	JEJU = 'JEJU',
 }
-registerEnumType(PropertyLocation, {
-	name: 'PropertyLocation',
+registerEnumType(CarLocation, {
+	name: 'CarLocation',
 });

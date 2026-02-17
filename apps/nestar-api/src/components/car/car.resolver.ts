@@ -1,7 +1,7 @@
 import { Args, Mutation, Resolver, Query } from '@nestjs/graphql';
-import { PropertyService } from './property.service';
-import { Properties, Property } from '../../libs/dto/ptoperty/property';
-import { AgentPropertiesInquiry, AllPropertiesInquiry, OrdinaryInquiry, PropertiesInquiry, PropertyInput } from '../../libs/dto/ptoperty/property.input';
+import { CarService } from './car.service';
+import { Properties, Car } from '../../libs/dto/car/car';
+import { AgentPropertiesInquiry, AllPropertiesInquiry, OrdinaryInquiry, PropertiesInquiry, CarInput } from '../../libs/dto/car/car.input';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { UseGuards } from '@nestjs/common';
 import { MemberType } from '../../libs/enums/member.enum';
@@ -10,46 +10,46 @@ import { AuthMember } from '../auth/decorators/authMember.decorator';
 import { ObjectId } from 'mongoose';
 import { WithoutGuard } from '../auth/guards/without.guard';
 import { shapeIntoMongoObjectId } from '../../libs/config';
-import { PropertyUpdate } from '../../libs/dto/ptoperty/property.update';
+import { CarUpdate } from '../../libs/dto/car/car.update';
 import { AuthGuard } from '../auth/guards/auth.guard';
 
 @Resolver()
-export class PropertyResolver {
-        constructor(private readonly propertyService: PropertyService) {}
+export class CarResolver {
+        constructor(private readonly propertyService: CarService) {}
    
         @Roles(MemberType.AGENT)
         @UseGuards(RolesGuard)
-        @Mutation(() => Property)
-        public async createProperty(
-        @Args('input') input: PropertyInput, 
-        @AuthMember('_id') memberId: ObjectId): Promise<Property> {
-            console.log("Mutation: createProperty");
+        @Mutation(() => Car)
+        public async createCar(
+        @Args('input') input: CarInput, 
+        @AuthMember('_id') memberId: ObjectId): Promise<Car> {
+            console.log("Mutation: createCar");
             input.memberId = memberId;
-            return await this.propertyService.createProperty(input);
+            return await this.propertyService.createCar(input);
       }
 
 
       @UseGuards(WithoutGuard)
-      @Query((returns) => Property)
-      public async getProperty(
+      @Query((returns) => Car)
+      public async getCar(
         @Args('propertyId') input: string,
         @AuthMember('_id') memberId: ObjectId,
-      ): Promise<Property> {
-        console.log('Query: getProperty');
+      ): Promise<Car> {
+        console.log('Query: getCar');
         const propertyId = shapeIntoMongoObjectId(input);
-        return await this.propertyService.getProperty(memberId, propertyId);
+        return await this.propertyService.getCar(memberId, propertyId);
       }
 
       @Roles(MemberType.AGENT)
       @UseGuards(RolesGuard)
-      @Mutation((returns) => Property)
-      public async updateProperty(
-        @Args('input') input: PropertyUpdate,
+      @Mutation((returns) => Car)
+      public async updateCar(
+        @Args('input') input: CarUpdate,
         @AuthMember('_id') memberId: ObjectId,
-      ): Promise<Property> {
-        console.log('Mutation: updateProperty');
+      ): Promise<Car> {
+        console.log('Mutation: updateCar');
         input._id = shapeIntoMongoObjectId(input._id);
-        return await this.propertyService.updateProperty(memberId, input)
+        return await this.propertyService.updateCar(memberId, input)
       }
 
 
@@ -98,14 +98,14 @@ export class PropertyResolver {
 
 
      @UseGuards(AuthGuard)
-     @Mutation(() => Property)
-     public async likeTargetProperty(
+     @Mutation(() => Car)
+     public async likeTargetCar(
         @Args('propertyId') input: string,
         @AuthMember('_id') memberId: ObjectId,
-     ): Promise<Property> {
-        console.log("Mutation: likeTargetProperty");
+     ): Promise<Car> {
+        console.log("Mutation: likeTargetCar");
         const likeRefId = shapeIntoMongoObjectId(input);
-        return await this.propertyService.likeTargetProperty(memberId, likeRefId);
+        return await this.propertyService.likeTargetCar(memberId, likeRefId);
      }
 
 
@@ -127,23 +127,23 @@ export class PropertyResolver {
 
        @Roles(MemberType.ADMIN)
       @UseGuards(RolesGuard)
-      @Mutation((returns) => Property)
-      public async updatePropertyByAdmin(
-        @Args('input') input: PropertyUpdate): Promise<Property> {
-        console.log("Mutation: updatePropertyByAdmin");
+      @Mutation((returns) => Car)
+      public async updateCarByAdmin(
+        @Args('input') input: CarUpdate): Promise<Car> {
+        console.log("Mutation: updateCarByAdmin");
         input._id = shapeIntoMongoObjectId(input._id)
-        return await this.propertyService.updatePropertyByAdmin(input);
+        return await this.propertyService.updateCarByAdmin(input);
       }
 
 
        @Roles(MemberType.ADMIN)
       @UseGuards(RolesGuard)
-      @Mutation((returns) => Property)
-      public async removePropertyByAdmin(
-        @Args('propertyId') input: string): Promise<Property> {
-        console.log("Mutation: removePropertyByAdmin");
+      @Mutation((returns) => Car)
+      public async removeCarByAdmin(
+        @Args('propertyId') input: string): Promise<Car> {
+        console.log("Mutation: removeCarByAdmin");
         const propertyId = shapeIntoMongoObjectId(input)
-        return await this.propertyService.removePropertyByAdmin(propertyId);
+        return await this.propertyService.removeCarByAdmin(propertyId);
       }
 
 }
