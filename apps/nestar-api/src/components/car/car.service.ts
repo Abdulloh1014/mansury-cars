@@ -30,7 +30,6 @@ export class CarService {
    public async createCar(input: CarInput): Promise<Car>{ 
     try{
       const result = await this.carModel.create(input);
-      // increase memberProperties +1
       await this.memberService.memberStatsEditor({
         _id: result.memberId,
         targetKey: 'memberCars',
@@ -174,11 +173,11 @@ export class CarService {
 }
 
 public async getFavorites(memberId: ObjectId, input: OrdinaryInquiry): Promise<CarList> {
-  return await this.likeService.getFavoriteProperties(memberId, input)
+  return await this.likeService.getFavoriteCars(memberId, input)
 }
 
 public async getVisited(memberId: ObjectId, input: OrdinaryInquiry): Promise<CarList> {
-  return await this.viewService.getVisitedProperties(memberId, input)
+  return await this.viewService.getVisitedCars(memberId, input)
 }
 
 

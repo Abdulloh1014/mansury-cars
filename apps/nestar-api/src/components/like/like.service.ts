@@ -41,7 +41,7 @@ export class LikeService {
         return result ? [{ memberId: memberId, likeRefId: likeRefId, myFavorite: true}] : [];
      }   
 
-     public async getFavoriteProperties(memberId: ObjectId, input: OrdinaryInquiry): Promise<CarList> {
+     public async getFavoriteCars(memberId: ObjectId, input: OrdinaryInquiry): Promise<CarList> {
         const { page, limit } = input;
         const match: T = {likeGroup: LikeGroup.CAR, memberId: memberId};
 
@@ -50,7 +50,7 @@ export class LikeService {
             {$sort: {updatedAt: -1}},
             {
                 $lookup: {
-                    from: 'properties',
+                    from: 'cars',
                     localField: 'likeRefId',
                     foreignField: '_id',
                     as: 'favoriteCar',

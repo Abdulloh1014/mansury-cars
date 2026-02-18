@@ -29,7 +29,7 @@ export class ViewService {
         return await this.viewModel.findOne(search).exec();
     }
 
-     public async getVisitedProperties(memberId: ObjectId, input: OrdinaryInquiry): Promise<CarList> {
+     public async getVisitedCars(memberId: ObjectId, input: OrdinaryInquiry): Promise<CarList> {
             const { page, limit } = input;
             const match: T = {viewGroup: ViewGroup.CAR, memberId: memberId};
     
@@ -38,7 +38,7 @@ export class ViewService {
                 {$sort: {updatedAt: -1}},
                 {
                     $lookup: {
-                        from: 'properties',
+                        from: 'cars',
                         localField: 'viewRefId',
                         foreignField: '_id',
                         as: 'visitedCar',
