@@ -12,7 +12,6 @@ import { ViewGroup } from '../../libs/enums/view.enum';
 import { CarUpdate } from '../../libs/dto/car/car.update';
 import * as moment from 'moment';
 import { lookupAuthMemberLiked, lookupMember, shapeIntoMongoObjectId } from '../../libs/config';
-import { MemberStatus } from '../../libs/enums/member.enum';
 import { LikeService } from '../like/like.service';
 import { LikeInput } from '../../libs/dto/like/like.input';
 import { LikeGroup } from '../../libs/enums/like.enum';
@@ -34,7 +33,7 @@ export class CarService {
       // increase memberProperties +1
       await this.memberService.memberStatsEditor({
         _id: result.memberId,
-        targetKey: 'memberProperties',
+        targetKey: 'memberCars',
         modifier: 1,
       })
       return result;
@@ -103,7 +102,7 @@ export class CarService {
     if (soldAt || deletedAt) {
       await this.memberService.memberStatsEditor({
         _id: memberId,
-        targetKey: 'memberProperties',
+        targetKey: 'memberCars',
         modifier: -1
       });
     }
@@ -112,7 +111,7 @@ export class CarService {
   }
 
 
-  public async getProperties (memberId: ObjectId, input: CarsInquiry): Promise<CarList> {
+  public async getCars (memberId: ObjectId, input: CarsInquiry): Promise<CarList> {
     const match: T = {carStatus: CarStatus.ACTIVE};
     const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
 
@@ -183,7 +182,7 @@ public async getVisited(memberId: ObjectId, input: OrdinaryInquiry): Promise<Car
 }
 
 
-public async getAgentProperties(memberId: ObjectId, input: AgentCarsInquiry): Promise<CarList> {
+public async getAgentCars(memberId: ObjectId, input: AgentCarsInquiry): Promise<CarList> {
   const { carStatus } = input.search;
   if (carStatus === CarStatus.DELETE) throw new BadRequestException(Message.NOT_ALLOWED_REQUEST);
 
@@ -243,7 +242,7 @@ public async likeTargetCar(memberId: ObjectId, likeRefId: ObjectId): Promise<Car
 
 /** ADMIN  **/
 
-public async getAllPropertiesByAdmin(input: AllCarsInquiry): Promise<CarList> {
+public async getAllCarsByAdmin(input: AllCarsInquiry): Promise<CarList> {
   const { carStatus, carLocationList } = input.search;
   const match: T = {};
   const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC};
@@ -296,7 +295,7 @@ public async updateCarByAdmin(input: CarUpdate): Promise<Car> {
   if (soldAt || deletedAt) {
     await this.memberService.memberStatsEditor({
       _id: result.memberId,
-      targetKey: 'memberProperties',
+      targetKey: 'memberCars',
       modifier: -1,
     });
   }

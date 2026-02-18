@@ -55,12 +55,12 @@ export class CarResolver {
 
       @UseGuards(WithoutGuard)
       @Query((returns) => CarList)
-      public async getProperties(
+      public async getCars(
         @Args('input') input: CarsInquiry,
         @AuthMember('_id') memberId: ObjectId,
       ): Promise<CarList> {
-        console.log('Query: getProperties');
-        return await this.carService.getProperties(memberId, input)
+        console.log('Query: getCars');
+        return await this.carService.getCars(memberId, input)
       }
 
       @UseGuards(AuthGuard)
@@ -87,12 +87,12 @@ export class CarResolver {
       @Roles(MemberType.AGENT)
       @UseGuards(RolesGuard)
       @Query((returns) => CarList)
-      public async getAgentProperties(
+      public async getAgentCars(
         @Args('input') input: AgentCarsInquiry,
         @AuthMember('_id') memberId: ObjectId,
       ): Promise<CarList> {
-        console.log("Query: getAgentProperties");
-        return await this.carService.getAgentProperties(memberId, input);
+        console.log("Query: getAgentCars");
+        return await this.carService.getAgentCars(memberId, input);
       }
 
 
@@ -116,12 +116,12 @@ export class CarResolver {
       @Roles(MemberType.ADMIN)
       @UseGuards(RolesGuard)
       @Query((returns) => CarList)
-      public async getAllPropertiesByAdmin(
+      public async getAllCarsByAdmin(
         @Args('input') input: AllCarsInquiry,
         @AuthMember('_id') memberId: ObjectId,
       ): Promise<CarList> {
-        console.log("Query: getAllPropertiesByAdmin")
-        return await this.carService.getAllPropertiesByAdmin(input);
+        console.log("Query: getAllCarsByAdmin")
+        return await this.carService.getAllCarsByAdmin(input);
       }
 
 
