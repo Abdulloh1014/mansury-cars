@@ -7,7 +7,7 @@ import { T } from '../../libs/types/common';
 import { Message } from '../../libs/enums/common.enum';
 import { OrdinaryInquiry } from '../../libs/dto/car/car.input';
 import { LikeGroup } from '../../libs/enums/like.enum';
-import { Properties } from '../../libs/dto/car/car';
+import { CarList } from '../../libs/dto/car/car';
 import { lookupFavorite } from '../../libs/config';
 
 @Injectable()
@@ -41,7 +41,7 @@ export class LikeService {
         return result ? [{ memberId: memberId, likeRefId: likeRefId, myFavorite: true}] : [];
      }   
 
-     public async getFavoriteProperties(memberId: ObjectId, input: OrdinaryInquiry): Promise<Properties> {
+     public async getFavoriteProperties(memberId: ObjectId, input: OrdinaryInquiry): Promise<CarList> {
         const { page, limit } = input;
         const match: T = {likeGroup: LikeGroup.CAR, memberId: memberId};
 
@@ -71,7 +71,7 @@ export class LikeService {
         ])
         .exec();
 
-        const result: Properties = {list: [], metaCounter: data[0].metaCounter};
+        const result: CarList = {list: [], metaCounter: data[0].metaCounter};
         //Ya’ni pipeline natijasini ishlatishga qulay formatga keltirad
 
 

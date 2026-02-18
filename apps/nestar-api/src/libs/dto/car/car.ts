@@ -1,7 +1,7 @@
 
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { ObjectId } from 'mongoose';
-import { CarLocation, CarStatus, CarType } from '../../enums/car.enum';
+import { CarFuelType, CarLocation, CarStatus, CarType } from '../../enums/car.enum';
 import { Member, TotalCounter } from '../member/member';
 import { MeLiked } from '../like/like';
 
@@ -29,11 +29,11 @@ export class Car {
    @Field(() => Number)
   carPrice: number;
 
-   @Field(() => Number)
+   @Field(() => Int)
   carMileage: number;
 
-   @Field(() => Int)
- carFuelType: number;
+   @Field(() => CarFuelType)
+  carFuelType: CarFuelType;
 
    @Field(() => Int)
   carDoors: number;
@@ -93,7 +93,7 @@ export class Car {
 
 
 @ObjectType()
-export class Properties {
+export class CarList {
   @Field(() => [Car])
   list: Car[];
 

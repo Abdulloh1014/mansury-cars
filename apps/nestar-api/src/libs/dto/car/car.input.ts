@@ -34,7 +34,7 @@ export class CarInput {
     carTitle: string;
 
     @IsNotEmpty()
-    @Field(() => Number)
+    @Field(() => Int)
     carMileage: number;
 
     @IsNotEmpty()

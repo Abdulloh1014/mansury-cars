@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
 import { Direction, Message } from '../../libs/enums/common.enum';
 import { AgentCarsInquiry, AllCarsInquiry, OrdinaryInquiry, CarsInquiry, CarInput } from '../../libs/dto/car/car.input';
-import { Properties, Car } from '../../libs/dto/car/car';
+import { CarList, Car } from '../../libs/dto/car/car';
 import { MemberService } from '../member/member.service';
 import { ViewService } from '../view/view.service';
 import { CarStatus } from '../../libs/enums/car.enum';
@@ -112,7 +112,7 @@ export class CarService {
   }
 
 
-  public async getProperties (memberId: ObjectId, input: CarsInquiry): Promise<Properties> {
+  public async getProperties (memberId: ObjectId, input: CarsInquiry): Promise<CarList> {
     const match: T = {carStatus: CarStatus.ACTIVE};
     const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
 
@@ -174,16 +174,16 @@ export class CarService {
   }
 }
 
-public async getFavorites(memberId: ObjectId, input: OrdinaryInquiry): Promise<Properties> {
+public async getFavorites(memberId: ObjectId, input: OrdinaryInquiry): Promise<CarList> {
   return await this.likeService.getFavoriteProperties(memberId, input)
 }
 
-public async getVisited(memberId: ObjectId, input: OrdinaryInquiry): Promise<Properties> {
+public async getVisited(memberId: ObjectId, input: OrdinaryInquiry): Promise<CarList> {
   return await this.viewService.getVisitedProperties(memberId, input)
 }
 
 
-public async getAgentProperties(memberId: ObjectId, input: AgentCarsInquiry): Promise<Properties> {
+public async getAgentProperties(memberId: ObjectId, input: AgentCarsInquiry): Promise<CarList> {
   const { carStatus } = input.search;
   if (carStatus === CarStatus.DELETE) throw new BadRequestException(Message.NOT_ALLOWED_REQUEST);
 
@@ -243,7 +243,7 @@ public async likeTargetCar(memberId: ObjectId, likeRefId: ObjectId): Promise<Car
 
 /** ADMIN  **/
 
-public async getAllPropertiesByAdmin(input: AllCarsInquiry): Promise<Properties> {
+public async getAllPropertiesByAdmin(input: AllCarsInquiry): Promise<CarList> {
   const { carStatus, carLocationList } = input.search;
   const match: T = {};
   const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC};
