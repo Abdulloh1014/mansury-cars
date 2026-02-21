@@ -12,6 +12,20 @@ registerEnumType(CarType, {    //registerEnumType() TypeScript enum’ni GraphQL
 	name: 'CarType',
 });
 
+export enum CarColor {
+	BLACK = 'BLACK',
+	WHITE = 'WHITE',
+	GRAY = 'GRAY',
+	RED = 'RED',
+	BLUE = 'BLUE',
+	SILVER = 'SILVER',
+	GREEN = 'GREEN',
+	YELLOW = 'YELLOW',
+	BROWN = 'BROWN',
+}
+registerEnumType(CarColor, {
+	name: 'CarColor',
+});
 
 export enum CarFuelType {
 	GASOLINE = 'GASOLINE',

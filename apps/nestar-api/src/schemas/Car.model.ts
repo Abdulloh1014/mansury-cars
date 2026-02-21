@@ -1,5 +1,5 @@
 import { Schema } from 'mongoose';
-import { CarFuelType, CarLocation, CarStatus, CarType } from '../libs/enums/car.enum';
+import { CarColor, CarFuelType, CarLocation, CarStatus, CarType } from '../libs/enums/car.enum';
 
 const CarSchema = new Schema(
 	{
@@ -21,10 +21,6 @@ const CarSchema = new Schema(
 			required: true,
 		},
 
-		carAddress: {
-			type: String,
-			required: true,
-		},
 
 		carTitle: {
 			type: String,
@@ -36,34 +32,41 @@ const CarSchema = new Schema(
 			required: true,
 		},
 
-		// carSquare: {
-		// 	type: Number,
-		// 	required: true,
-		// },
-		carMileage: { // carSquare o'rniga
+		
+		carMileage: { 
             type: Number,
             required: true,
             default: 0,
         },
 
-		// carBeds: {
-		// 	type: Number,
-		// 	required: true,
-		// },
-		carFuelType: { // carBeds o'rniga (yoqilg'i turi)
+		
+		carFuelType: { 
             type: String, 
-			enum: CarFuelType, // Enum qiymatlari
+			enum: CarFuelType,
             required: true,
         },
 
-		// carRooms: {
-		// 	type: Number,
-		// 	required: true,
-		// },
-	    carDoors: { // carSeats o'rniga eshiklar soni
+		
+	    carDoors: { 
         type: Number,
         required: true,
       },
+
+	    carYear: {
+			type: Number,
+			required: true,
+		},
+
+		carColor: {
+			type: String,
+			enum: CarColor,
+			required: true,
+		},
+
+		carEngine: {
+			type: Number,
+			required: true,
+		},
 
 	  
 		carViews: {

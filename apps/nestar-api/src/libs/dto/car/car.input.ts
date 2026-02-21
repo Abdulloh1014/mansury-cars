@@ -1,6 +1,6 @@
 import { Field, InputType, Int } from "@nestjs/graphql";
 import { IsIn, IsInt, IsNotEmpty, IsOptional, Length, Min } from 'class-validator'
-import { CarFuelType, CarLocation, CarStatus, CarType } from "../../enums/car.enum";
+import { CarColor, CarFuelType, CarLocation, CarStatus, CarType } from "../../enums/car.enum";
 import { ObjectId } from "mongoose";
 import { availableOptions, availableCarSorts } from "../../config";
 import { Direction } from "../../enums/common.enum";
@@ -26,12 +26,9 @@ export class CarInput {
     @IsNotEmpty()
     @Length(3, 100)
     @Field(() => String)
-    carAddress: string;
-
-    @IsNotEmpty()
-    @Length(3, 100)
-    @Field(() => String)
     carTitle: string;
+
+
 
     @IsNotEmpty()
     @Field(() => Int)
@@ -46,6 +43,22 @@ export class CarInput {
     @Min(1)
     @Field(() => Int)
     carDoors: number;
+
+    @IsNotEmpty()
+    @Field(() => Number)
+    carYear: number;
+
+    @IsNotEmpty()
+    @Field(() => CarColor)
+    carColor: CarColor;
+
+    @IsNotEmpty()
+    @Field(() => Number)
+    carEngine: number;
+
+
+
+
 
     @IsNotEmpty()
     @Field(() => [String])
