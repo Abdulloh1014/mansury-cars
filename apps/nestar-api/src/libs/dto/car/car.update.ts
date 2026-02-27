@@ -36,6 +36,8 @@ export class CarUpdate {
 
 
     @IsOptional()
+    @IsInt()
+    @Min(0)
     @Field(() => Number, { nullable: true })
     carMileage?: number;
 

@@ -31,6 +31,8 @@ export class CarInput {
 
 
     @IsNotEmpty()
+    @IsInt()
+    @Min(0)
     @Field(() => Int)
     carMileage: number;
 
@@ -40,7 +42,6 @@ export class CarInput {
 
     @IsNotEmpty()
     @IsInt()
-    @Min(1)
     @Field(() => Int)
     carDoors: number;
 
@@ -56,8 +57,7 @@ export class CarInput {
     @Field(() => Number)
     carEngine: number;
 
-
-
+   
 
 
     @IsNotEmpty()
@@ -131,9 +131,7 @@ export class PISearch {
     @Field(() => [Int], {nullable: true})
     doorsList?: number[]; // seatsList o'rniga eshiklar soni filtri
 
-    // @IsOptional()
-    // @Field(() => [String], {nullable: true})
-    // fuelTypeList?: string;
+   
     @IsOptional()
     @Field(() => [CarFuelType], {nullable: true}) // String emas, Enum list!
     fuelTypeList?: CarFuelType[];
@@ -160,9 +158,11 @@ export class PISearch {
     @Field(() => String, {nullable: true})
     text?: string;
     
-    
 
+  
 }
+
+
 
 
   @InputType()
