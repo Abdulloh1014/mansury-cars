@@ -126,6 +126,11 @@ export class PISearch {
     @IsOptional()
     @Field(() => [CarType], {nullable: true})
     typeList?: CarType[];
+    
+    @IsOptional()
+    @Field(() => [CarColor], {nullable: true})
+    colorList?: CarColor[];
+
 
     @IsOptional()
     @Field(() => [Int], {nullable: true})

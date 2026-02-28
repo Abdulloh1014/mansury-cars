@@ -153,6 +153,7 @@ export class CarService {
     mileageRange,
     options,
     text,
+    colorList
   } = input.search;
 
   if (memberId) match.memberId = shapeIntoMongoObjectId(memberId);
@@ -160,6 +161,7 @@ export class CarService {
   if (doorsList && doorsList.length) match.carDoors = { $in: doorsList };
   if (fuelTypeList && fuelTypeList.length) match.carFuelType = { $in: fuelTypeList };
   if (typeList && typeList.length) match.carType = { $in: typeList };
+  if (colorList && colorList.length) match.carColor = { $in: colorList };
   
   if (pricesRange) match.carPrice = { $gte: pricesRange.start, $lte: pricesRange.end };
   if (periodsRange) match.createdAt = { $gte: periodsRange.start, $lte: periodsRange.end };
