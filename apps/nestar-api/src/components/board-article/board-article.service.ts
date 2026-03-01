@@ -15,6 +15,7 @@ import { lookupAuthMemberLiked, lookupMember, shapeIntoMongoObjectId } from '../
 import { LikeInput } from '../../libs/dto/like/like.input';
 import { LikeGroup } from '../../libs/enums/like.enum';
 import { LikeService } from '../like/like.service';
+import { MemberType } from '../../libs/enums/member.enum';
 
 
 @Injectable()
@@ -27,9 +28,12 @@ export class BoardArticleService {
     ) {}
 
 
-    public async createBoardArticle(memberId: ObjectId, input: BoardArticleInput): Promise<BoardArticle> {
-        input.memberId = memberId;
+    public async createBoardArticle(memberId: ObjectId, input: BoardArticleInput,
+        memberType: MemberType,
+    ): Promise<BoardArticle> {
         
+        input.memberId = memberId;
+        input.memberType = memberType;
         try{
             const result = await this.boardArticleModel.create(input);
             await this.memberService.memberStatsEditor({
@@ -104,12 +108,13 @@ export class BoardArticleService {
 
 
     public async getBoardArticles(memberId: ObjectId, input: BoardArticlesInquiry): Promise<BoardArticles> {
-        const { articleCategory, text } = input.search;
+        const { articleCategory, text, memberType } = input.search;
         const match: T = { articleStatus: BoardArticleStatus.ACTIVE };
         const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
 
         if (articleCategory) match.articleCategory = articleCategory;
         if (text) match.articleTitle = { $regex: new RegExp(text, 'i') }; 
+        if (memberType) match.memberType = memberType;
         if (input.search.memberId) {
             match.memberId = shapeIntoMongoObjectId(input.search.memberId);
         }

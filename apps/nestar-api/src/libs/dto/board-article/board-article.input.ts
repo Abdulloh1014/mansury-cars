@@ -13,9 +13,9 @@ export class BoardArticleInput {
 	@Field(() => BoardArticleCategory)
 	articleCategory: BoardArticleCategory;
 
-	// @IsOptional()
-	// @Field(() => MemberType, { nullable: true })
-	// memberType?: MemberType;
+	@IsOptional()
+	@Field(() => MemberType, { nullable: true })
+	memberType?: MemberType;
 
 	@IsNotEmpty()
 	@Length(3, 50)
@@ -40,9 +40,9 @@ class BAISearch {
 	@Field(() => BoardArticleCategory, { nullable: true })
 	articleCategory?: BoardArticleCategory;
 
-	// @IsOptional()
-	// @Field(() => MemberType, { nullable: true })
-	// memberType?: MemberType;
+	@IsOptional()
+	@Field(() => MemberType, { nullable: true })
+	memberType?: MemberType;
 
 	@IsOptional()
 	@Field(() => String, { nullable: true })

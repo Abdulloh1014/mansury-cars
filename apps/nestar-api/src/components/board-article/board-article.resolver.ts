@@ -25,9 +25,10 @@ export class BoardArticleResolver {
      public async createBoardArticle(
          @Args('input') input: BoardArticleInput,
          @AuthMember('_id') memberId: ObjectId,
+         @AuthMember('memberType') memberType: MemberType,
      ): Promise<BoardArticle> {
          console.log('Mutation: createBoardArticle');
-         return await this.boardArticleService.createBoardArticle(memberId, input);
+         return await this.boardArticleService.createBoardArticle(memberId, input, memberType);
      }
 
 

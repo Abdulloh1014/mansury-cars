@@ -119,6 +119,10 @@ export class PISearch {
     @Field(() => String, {nullable: true})
     memberId: ObjectId;
 
+    IsOptional()
+    @Field(() => CarType, {nullable: true})
+    carType?: CarType;
+
     @IsOptional()
     @Field(() => [CarLocation], {nullable: true})
     locationList?: CarLocation[];

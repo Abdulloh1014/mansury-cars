@@ -13,8 +13,8 @@ export class BoardArticle {
 	@Field(() => BoardArticleCategory)
 	articleCategory: BoardArticleCategory;
 
-	// @Field(() => MemberType, { nullable: true })
-	// memberType: MemberType;
+	@Field(() => MemberType, { nullable: true })
+	memberType: MemberType;
 
 	@Field(() => BoardArticleStatus)
 	articleStatus: BoardArticleStatus;

@@ -5,11 +5,10 @@ import { MemberType } from '../libs/enums/member.enum';
 const BoardArticleSchema = new Schema(
 	{
 
-		// memberType: {
-		// 	type: String,
-		// 	enum: Object.values(MemberType),
-		// 	required: true,
-		// },
+		memberType: {
+			type: String,
+			enum: MemberType,
+		},
 
 
 		articleCategory: {

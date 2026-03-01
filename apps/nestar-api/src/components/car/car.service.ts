@@ -112,6 +112,10 @@ export class CarService {
 
   public async getCars (memberId: ObjectId, input: CarsInquiry): Promise<CarList> {
     const match: T = {carStatus: CarStatus.ACTIVE};
+      if (input.search?.carType) {
+    match.carType = input.search.carType;
+  }
+
     const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
 
     this.shapeMatchQuery(match, input)
