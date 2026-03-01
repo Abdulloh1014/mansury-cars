@@ -1,8 +1,17 @@
 import { Schema } from 'mongoose';
 import { BoardArticleCategory, BoardArticleStatus } from '../libs/enums/board-article.enum';
+import { MemberType } from '../libs/enums/member.enum';
 
 const BoardArticleSchema = new Schema(
 	{
+
+		// memberType: {
+		// 	type: String,
+		// 	enum: Object.values(MemberType),
+		// 	required: true,
+		// },
+
+
 		articleCategory: {
 			type: String,
 			enum: BoardArticleCategory,

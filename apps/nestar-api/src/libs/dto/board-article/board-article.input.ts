@@ -4,12 +4,18 @@ import { ObjectId } from 'mongoose';
 import { BoardArticleCategory, BoardArticleStatus } from '../../enums/board-article.enum';
 import { Direction } from '../../enums/common.enum';
 import { availableBoardArticleSorts } from '../../config';
+import { Member } from '../member/member';
+import { MemberType } from '../../enums/member.enum';
 
 @InputType()
 export class BoardArticleInput {
 	@IsNotEmpty()
 	@Field(() => BoardArticleCategory)
 	articleCategory: BoardArticleCategory;
+
+	// @IsOptional()
+	// @Field(() => MemberType, { nullable: true })
+	// memberType?: MemberType;
 
 	@IsNotEmpty()
 	@Length(3, 50)
@@ -33,6 +39,10 @@ class BAISearch {
 	@IsOptional()
 	@Field(() => BoardArticleCategory, { nullable: true })
 	articleCategory?: BoardArticleCategory;
+
+	// @IsOptional()
+	// @Field(() => MemberType, { nullable: true })
+	// memberType?: MemberType;
 
 	@IsOptional()
 	@Field(() => String, { nullable: true })

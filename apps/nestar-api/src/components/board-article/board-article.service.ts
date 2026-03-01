@@ -33,7 +33,7 @@ export class BoardArticleService {
         try{
             const result = await this.boardArticleModel.create(input);
             await this.memberService.memberStatsEditor({
-                _id: memberId,
+                _id: memberId, 
                 targetKey: 'memberArticles',
                 modifier: 1,
         });
@@ -109,7 +109,7 @@ export class BoardArticleService {
         const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
 
         if (articleCategory) match.articleCategory = articleCategory;
-        if (text) match.articleTitle = { $regex: new RegExp(text, 'i') };
+        if (text) match.articleTitle = { $regex: new RegExp(text, 'i') }; 
         if (input.search.memberId) {
             match.memberId = shapeIntoMongoObjectId(input.search.memberId);
         }
