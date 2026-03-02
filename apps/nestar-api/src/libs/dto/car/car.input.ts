@@ -119,7 +119,7 @@ export class PISearch {
     @Field(() => String, {nullable: true})
     memberId: ObjectId;
 
-    IsOptional()
+    @IsOptional()
     @Field(() => CarType, {nullable: true})
     carType?: CarType;
 
