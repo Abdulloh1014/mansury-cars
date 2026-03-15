@@ -123,9 +123,29 @@ export class MembersInquiry {
     @IsNotEmpty()
     @Field(() => MISearch)
     search: MISearch;
-
-
 }
+
+
+@InputType()
+export class GoogleLoginInput {
+    @IsNotEmpty()
+    @Field(() => String)
+    memberEmail: string;
+
+    @IsNotEmpty()
+    @Field(() => String)
+    memberNick: string;
+
+    @IsOptional()
+    @Field(() => String, { nullable: true })
+    memberImage?: string;
+
+    @IsOptional()
+    @Field(() => MemberType, { nullable: true })
+    memberType?: MemberType;
+}
+
+
 
 
    

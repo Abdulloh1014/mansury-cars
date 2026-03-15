@@ -2,8 +2,8 @@ import { BadRequestException, Injectable, InternalServerErrorException } from '@
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
 import { Member, Members } from '../../libs/dto/member/member';
-import { AgentsInquiry, LoginInput, MemberInput, MembersInquiry } from '../../libs/dto/member/member.input';
-import { MemberStatus, MemberType } from '../../libs/enums/member.enum';
+import { AgentsInquiry, LoginInput, MemberInput, MembersInquiry, GoogleLoginInput } from '../../libs/dto/member/member.input';
+import { MemberStatus, MemberType, MemberAuthType } from '../../libs/enums/member.enum';
 import { Direction, Message } from '../../libs/enums/common.enum';
 import { AuthService } from '../auth/auth.service';
 import { MemberUpdate } from '../../libs/dto/member/member.update';
@@ -15,6 +15,7 @@ import { LikeGroup } from '../../libs/enums/like.enum';
 import { LikeService } from '../like/like.service';
 import { Follower, Following, MeFollowed } from '../../libs/dto/follow/follow';
 import { lookupAuthMemberLiked } from '../../libs/config';
+
 
 
 @Injectable()
@@ -72,6 +73,46 @@ export class MemberService {
         response.accessToken = await this.authService.createToken(response);
         return response;
     }
+
+
+    public async googleLogin(input: GoogleLoginInput): Promise<Member> {
+    const { memberEmail, memberNick, memberImage } = input;
+
+    // 1. Email bilan mavjud userni qidirish
+    let member = await this.memberModel
+        .findOne({ memberEmail: memberEmail })
+        .exec();
+
+    // 2. Agar user mavjud bo'lsa — token qaytarish
+    if (member) {
+        if (member.memberStatus === MemberStatus.BLOCK) {
+            throw new InternalServerErrorException(Message.BLOCKED_USER);
+        }
+        member.accessToken = await this.authService.createToken(member);
+        return member;
+    }
+
+    // 3. Agar user yo'q bo'lsa — yangi yaratish
+    try {
+        const newMember = await this.memberModel.create({
+            memberEmail: memberEmail,
+            memberNick: memberNick,
+            memberImage: memberImage ?? '',
+            memberAuthType: MemberAuthType.GOOGLE,
+            memberType: input.memberType ?? MemberType.USER,
+            memberPhone: '',
+            memberPassword: '',
+        });
+
+        newMember.accessToken = await this.authService.createToken(newMember);
+        return newMember;
+
+    } catch (err) {
+        console.log('Google login error:', err.message);
+        throw new BadRequestException(Message.USED_MEMBER_NICK_OR_PHONE);
+    }
+}
+
 
      public async updateMember(memberid: ObjectId, input: MemberUpdate): Promise<Member> {
         const result: Member = await this.memberModel.findOneAndUpdate(

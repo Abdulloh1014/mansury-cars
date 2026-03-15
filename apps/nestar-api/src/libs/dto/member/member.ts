@@ -29,6 +29,9 @@ export class Member {
   @Field(() => String)
   memberNick: string;
 
+  @Field(() => String, { nullable: true })
+  memberEmail?: string;
+
   memberPassword?: string;
 
   @Field(() => String, {nullable: true})   //👉 bu field bo‘sh (null) bo‘lishi mumkin degani.
