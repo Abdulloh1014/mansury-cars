@@ -63,23 +63,45 @@ export class CommentService {
     }
 
 
-     public async updateComment(memberId: ObjectId, input: CommentUpdate): Promise<Comment> {
-        const { _id } = input;
-        const result = await this.commentModel.findOneAndUpdate(
-            {
-                _id: _id,
-                memberId: memberId,
-                commentStatus: CommentStatus.ACTIVE,
-            },
-            input,
-            {
-                new: true,
-            },
-        ).exec();
-        if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
-        return result;
+    //  public async updateComment(memberId: ObjectId, input: CommentUpdate): Promise<Comment> {
+    //     const { _id } = input;
+    //     const result = await this.commentModel.findOneAndUpdate(
+    //         {
+    //             _id: _id,
+    //             memberId: memberId,
+    //             commentStatus: CommentStatus.ACTIVE,
+    //         },
+    //         input,
+    //         {
+    //             new: true,
+    //         },
+    //     ).exec();
+    //     if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
+    //     return result;
+    // }
+
+    // ✅ Shunday o'zgartiring
+public async updateComment(memberId: ObjectId, input: CommentUpdate): Promise<Comment> {
+    const { _id } = input;
+    
+    // Avval commentni top
+    const comment = await this.commentModel.findOne({ _id, commentStatus: CommentStatus.ACTIVE });
+    if (!comment) throw new InternalServerErrorException(Message.UPDATE_FAILED);
+    
+    // Faqat comment egasi edit qila oladi
+    // Lekin delete uchun memberId tekshirmaymiz (agent ham delete qila olsin)
+    if (!input.commentStatus && comment.memberId.toString() !== memberId.toString()) {
+        throw new InternalServerErrorException(Message.UPDATE_FAILED);
     }
 
+    const result = await this.commentModel.findOneAndUpdate(
+        { _id, commentStatus: CommentStatus.ACTIVE },
+        input,
+        { new: true },
+    ).exec();
+    if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
+    return result;
+}
 
     public async getComments(memberId: ObjectId, input: CommentsInquiry): Promise<Comments> {
         const { commentRefId } = input.search;
